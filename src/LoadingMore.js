@@ -5,7 +5,6 @@ import Loaders from "react-loader-spinner";
 // import InfiniteScroll from "react-infinite-scroller";
 import styled from "styled-components";
 import "./App.css";
-import InfiniteLoading from "./InfiniteLoading";
 
 // const url = https://picsum.photos/v2/list?page=0&limit=10
 
@@ -14,13 +13,16 @@ function App() {
   const [url, setUrl] = useState(`https://picsum.photos/v2/list`);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  const fetchImage = async () => {
+    const res = await axios.get(`${url}?page=${page}&limit=10`);
+    setImages(images.concat(res.data));
+  };
+
   useEffect(() => {
-    const fetchImage = async () => {
-      const res = await axios.get(`${url}?page=${page}&limit=10`);
-      setImages(images.concat(res.data));
-    };
     fetchImage();
   }, []);
+
   const loadMore = async () => {
     setLoading(true);
     setTimeout(async () => {
@@ -34,7 +36,25 @@ function App() {
   console.log(page);
   return (
     <Container>
-      <InfiniteLoading />
+      <Row>
+        {images.map((image) => {
+          return (
+            <Col key={image.id} className='col'>
+              <Image>
+                <img src={image.download_url} alt={image.author} />
+              </Image>
+            </Col>
+          );
+        })}
+      </Row>
+      <button className='loader' onClick={loadMore}>
+        {!loading && <span>Load more...</span>}
+        <span>
+          {loading && (
+            <Loaders type='Oval' color='white' height={20} width={20} />
+          )}
+        </span>
+      </button>
     </Container>
   );
 }
