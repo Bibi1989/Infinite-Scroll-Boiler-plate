@@ -8,7 +8,7 @@ import "./App.css";
 
 // const url = https://picsum.photos/v2/list?page=0&limit=10
 
-function App() {
+function LoadingMore() {
   const [images, setImages] = useState([]);
   const [url] = useState(`https://picsum.photos/v2/list`);
   const [page, setPage] = useState(0);
@@ -60,7 +60,7 @@ function App() {
   );
 }
 
-export default App;
+export default LoadingMore;
 
 const Container = styled.div`
   .loader {
