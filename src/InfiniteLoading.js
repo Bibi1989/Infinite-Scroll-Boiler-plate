@@ -10,16 +10,19 @@ import "./App.css";
 
 function InfiniteLoading() {
   const [images, setImages] = useState([]);
-  const [url, setUrl] = useState(`https://picsum.photos/v2/list`);
+  const [url] = useState(`https://picsum.photos/v2/list`);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  const fetchImage = async () => {
+    const res = await axios.get(`${url}?page=${page}&limit=10`);
+    setImages(images.concat(res.data));
+  };
+
   useEffect(() => {
-    const fetchImage = async () => {
-      const res = await axios.get(`${url}?page=${page}&limit=10`);
-      setImages(images.concat(res.data));
-    };
     fetchImage();
+
+    // eslint-disable-next-line
   }, []);
 
   const loadMore = async () => {
@@ -32,7 +35,6 @@ function InfiniteLoading() {
     }, 1500);
   };
 
-  console.log(page);
   return (
     <Container>
       <InfiniteScroll
@@ -58,6 +60,9 @@ function InfiniteLoading() {
               <Col key={image.id} className='col'>
                 <Image>
                   <img src={image.download_url} alt={image.author} />
+                  <Overlay className='overlay'>
+                    <span>Author By: {image.author}</span>
+                  </Overlay>
                 </Image>
               </Col>
             );
@@ -92,7 +97,33 @@ const Row = styled.div`
 `;
 const Col = styled.div``;
 const Image = styled.div`
+  position: relative;
+  border-radius: 0.25em;
+
+  &:hover .overlay {
+    opacity: 1;
+    pointer-events: visible;
+  }
+
   img {
+    display: block;
     width: 100%;
   }
+`;
+
+const Overlay = styled.div`
+  background-color: rgba(51, 51, 51, 0.712);
+  opacity: 0;
+  pointer-events: none;
+  color: white;
+  font-size: 1.3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: all 0.6s ease-in-out;
 `;

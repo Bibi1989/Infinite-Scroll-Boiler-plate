@@ -10,7 +10,7 @@ import "./App.css";
 
 function App() {
   const [images, setImages] = useState([]);
-  const [url, setUrl] = useState(`https://picsum.photos/v2/list`);
+  const [url] = useState(`https://picsum.photos/v2/list`);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +21,8 @@ function App() {
 
   useEffect(() => {
     fetchImage();
+
+    // eslint-disable-next-line
   }, []);
 
   const loadMore = async () => {
@@ -33,7 +35,6 @@ function App() {
     }, 2000);
   };
 
-  console.log(page);
   return (
     <Container>
       <Row>
